@@ -31,6 +31,8 @@ class LocalTime(object):
     def todayIs(self, day):
         return (self.days[day] == self.currentTime.weekday())
 
+    def todayAt(self, hr, min = 0, sec = 0):
+        return self.currentTime.replace(hour=hr, minute=min, second=sec)
 
 
 def signalHandler(signal, frame):
@@ -43,5 +45,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-a = LocalTime()
-a.getCurrentTime()
