@@ -14,45 +14,45 @@ timeZone = 'US/Pacific'
 class TimeUtils(object):
     def __init__(self):
         # Setup Astral
-        self.__astralInstance = Astral()
-        self.__astralInstance.solar_depression = "civil"
-        self.__astralCity = self.__astralInstance[cityName]
+        self.astralInstance = Astral()
+        self.astralInstance.solar_depression = "civil"
+        self.astralCity = self.astralInstance[cityName]
 
-        self.__days = {"Monday" : 0, "Tuesday" : 1, "Wednesday" : 2, "Thursday" : 3, "Friday" : 4, "Saturday" : 5, "Sunday" : 6,
+        self.days = {"Monday" : 0, "Tuesday" : 1, "Wednesday" : 2, "Thursday" : 3, "Friday" : 4, "Saturday" : 5, "Sunday" : 6,
                      "Mon" : 0, "Tues" : 1, "Wed" : 2, "Thurs" : 3, "Fri" : 4, "Sat" : 5, "Sun" : 6 }
 
         # Update time once to fill __currentTime variable
         self.updateTime()
 
     def now(self):
-        return self.__currentTime
+        return self.currentTime
 
     def sunTimes(self):
-        return self.__sunTime
+        return self.sunTime
 
     def isToday(self, day):
         if type(day) is str:
             try:
-                return (self.__days[day.capitalize()] == self.__currentTime.weekday())
+                return (self.days[day.capitalize()] == self.currentTime.weekday())
             except KeyError:
                 return False;
         else:
-            return (day == self.__currentTime.weekday())
+            return (day == self.currentTime.weekday())
 
     def todayAt(self, hr, min = 0, sec = 0):
-        return self.__currentTime.replace(hour=hr, minute=min, second=sec)
+        return self.currentTime.replace(hour=hr, minute=min, second=sec)
 
     def minutesUntil(self, hr, min = 0, sec = 0):
-        timeDifference = self.todayAt(hr, min, sec) - self.__currentTime
+        timeDifference = self.todayAt(hr, min, sec) - self.currentTime
         return int(timeDifference.total_seconds() / 60)
 
     def updateTime(self):
-        self.__currentTime = datetime.datetime.now(pytz.timezone(timeZone))
+        self.currentTime = datetime.datetime.now(pytz.timezone(timeZone))
         if __verbose__:
-            print "Current Time: %s" % self.__currentTime
+            print "Current Time: %s" % self.currentTime
 
         # Then get todays sunset/sunrise times
-        self.__sunTime = self.__astralCity.sun(self.__currentTime)
+        self.sunTime = self.astralCity.sun(self.currentTime)
 
 def signalHandler(signal, frame):
     print "Exiting..."
