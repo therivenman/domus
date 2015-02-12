@@ -6,17 +6,20 @@ import datetime
 import pytz
 from astral import Astral
 
+try:
+    import settings
+except:
+    sys.exit("Unable to find settings.py file.")
+
 __verbose__ = True
 __version__ = "0.0.1"
-cityName = 'Los Angeles'
-timeZone = 'US/Pacific'
 
 class TimeUtils(object):
     def __init__(self):
         # Setup Astral
         self.astralInstance = Astral()
         self.astralInstance.solar_depression = "civil"
-        self.astralCity = self.astralInstance[cityName]
+        self.astralCity = self.astralInstance[settings.cityName]
 
         self.days = {"Monday" : 0, "Tuesday" : 1, "Wednesday" : 2, "Thursday" : 3, "Friday" : 4, "Saturday" : 5, "Sunday" : 6,
                      "Mon" : 0, "Tues" : 1, "Wed" : 2, "Thurs" : 3, "Fri" : 4, "Sat" : 5, "Sun" : 6 }
@@ -47,7 +50,7 @@ class TimeUtils(object):
         return int(timeDifference.total_seconds() / 60)
 
     def updateTime(self):
-        self.currentTime = datetime.datetime.now(pytz.timezone(timeZone))
+        self.currentTime = datetime.datetime.now(pytz.timezone(settings.timeZone))
         if __verbose__:
             print "Current Time: %s" % self.currentTime
 
