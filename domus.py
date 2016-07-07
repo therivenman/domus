@@ -44,6 +44,9 @@ except:
             location['lat']=s['geometry']['location']['lat']
             location['lon']=s['geometry']['location']['lng']
 
+    if __verbose__:
+        print "Writing location to data store: %s" % location
+
     pickle.dump(location, open(store_location, "w"))
 
 
@@ -64,9 +67,6 @@ class TimeUtils(object):
     def now(self):
         return self.currentTime
 
-    def sunTimes(self):
-        return self.sunTime
-
     def isToday(self, day):
         if type(day) is str:
             try:
@@ -79,9 +79,9 @@ class TimeUtils(object):
     def todayAt(self, hr, min = 0, sec = 0):
         return self.currentTime.replace(hour=hr, minute=min, second=sec)
 
-    def minutesUntil(self, hr, min = 0, sec = 0):
-        timeDifference = self.todayAt(hr, min, sec) - self.currentTime
-        return int(timeDifference.total_seconds() / 60)
+    def timeUntil(self, time):
+        timeDifference = time - self.currentTime
+        return int(timeDifference.total_seconds())
 
     def updateTime(self):
         self.currentTime = datetime.datetime.now(pytz.timezone(settings.timeZone))
@@ -89,28 +89,15 @@ class TimeUtils(object):
             print "Current Time: %s" % self.currentTime
 
         # Then get todays sunset/sunrise times
+        self.s.compute()
         self.sunriseTime = self.sunrise()
         self.sunsetTime = self.sunset()
 
     def sunrise(self):
-        self.s.compute()
-
-        sunrise_date = str(ephem.localtime(self.e.next_rising(self.s)).date())
-        sunrise_time = str(ephem.localtime(self.e.next_rising(self.s)).hour).zfill(2)+":"+ \
-                       str(ephem.localtime(self.e.next_rising(self.s)).minute).zfill(2)+":"+ \
-                       str(ephem.localtime(self.e.next_rising(self.s)).second).zfill(2)
-
-        return sunrise_date + " " + sunrise_time
+        return pytz.utc.localize(self.e.next_rising(self.s).datetime())
 
     def sunset(self):
-        self.s.compute()
-
-        sunset_date = str(ephem.localtime(self.e.next_setting(self.s)).date())
-        sunset_time = str(ephem.localtime(self.e.next_setting(self.s)).hour).zfill(2)+":"+ \
-                      str(ephem.localtime(self.e.next_setting(self.s)).minute).zfill(2)+":"+ \
-                      str(ephem.localtime(self.e.next_setting(self.s)).second).zfill(2)
-
-        return sunset_date + " " + sunset_time
+        return pytz.utc.localize(self.e.next_setting(self.s).datetime())
 
 def signalHandler(signal, frame):
     print "Exiting..."
