@@ -94,10 +94,10 @@ class TimeUtils(object):
         self.sunsetTime = self.sunset()
 
     def sunrise(self):
-        return pytz.utc.localize(self.e.next_rising(self.s).datetime())
+        return pytz.utc.localize(self.e.next_rising(self.s).datetime()).astimezone(pytz.timezone(settings.timeZone))
 
     def sunset(self):
-        return pytz.utc.localize(self.e.next_setting(self.s).datetime())
+        return pytz.utc.localize(self.e.next_setting(self.s).datetime()).astimezone(pytz.timezone(settings.timeZone))
 
 def signalHandler(signal, frame):
     print "Exiting..."
