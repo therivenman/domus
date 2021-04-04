@@ -1,2 +1,2 @@
-address = 'San Diego'
+cityName = 'San Diego'
 timeZone = 'US/Pacific'
