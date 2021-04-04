@@ -9,7 +9,7 @@ def signalHandler(signal, frame):
 
 def main():
     timeUtils = domus.TimeUtils()
-    sleepTime = timeUtils.timeUntil(timeUtils.sunset())
+    sleepTime = timeUtils.timeUntil(timeUtils.dusk())
 
     signal.signal(signal.SIGINT, signalHandler)
 
