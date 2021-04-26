@@ -10,7 +10,7 @@ def signalHandler(signal, frame):
 
 def main():
     timeUtils = domus.TimeUtils()
-    sleepTime = timeUtils.timeUntil(timeUtils.dusk())
+    sleepTime = timeUtils.timeUntil(timeUtils.sunset())
 
     if (sleepTime < 0):
         print "Sunset has already passed for today."
@@ -18,7 +18,7 @@ def main():
 
     signal.signal(signal.SIGINT, signalHandler)
 
-    print "Dusk at %s. Sleeping %d seconds." % (timeUtils.dusk(), sleepTime)
+    print "Sunset at %s. Sleeping %d seconds." % (timeUtils.sunset(), sleepTime)
     time.sleep(sleepTime)
 
 if __name__ == "__main__":
